@@ -1,11 +1,11 @@
 import React from "react";
 import { Image, ImageBackground, StyleSheet, Text, View } from "react-native";
 
-export default function WelcomeScreen() {
+export default function HomeScreen() {
   return (
     <ImageBackground
       style={styles.background}
-      source={require("../assets/tree.jpg")}
+      source={require("../assets/rack.jpg")}
     >
       <View style={styles.logoContainer}>
         <Image
@@ -14,7 +14,6 @@ export default function WelcomeScreen() {
         />
         <Text style={styles.title}>Lift Big, Get Big</Text>
       </View>
-      <View style={styles.menu}></View>
     </ImageBackground>
   );
 }
