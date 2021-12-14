@@ -6,13 +6,18 @@ import {
   Text,
   SafeAreaView,
   ScrollView,
+  TouchableOpacity,
   View,
 } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 import { useFocusEffect } from "@react-navigation/native";
+import { editWeek } from "../redux/actions";
 
 export default function PPLScreen(props) {
-  const [selectedExercise, setSelectedExercise] = useState("all");
-  const [exercises, setExercises] = useState([
+  const { squat, bench, deadlift, week } = useSelector((s) => s);
+  const dispatch = useDispatch();
+  const [selectedGroup, setSelectedGroup] = useState("all");
+  const [compounds, setCompounds] = useState([
     {
       motion: "push",
       name: "Bench Press",
@@ -21,11 +26,27 @@ export default function PPLScreen(props) {
       repsWeight: [200, 235, 265],
     },
     {
-      motion: "push",
-      name: "Overhead Press",
+      motion: "pull",
+      name: "Deadlift",
       sets: 3,
       reps: 5,
-      repsWeight: [100, 115, 130],
+      repsWeight: [305, 355, 400],
+    },
+    {
+      motion: "legs",
+      name: "Squat",
+      sets: 3,
+      reps: 5,
+      repsWeight: [255, 295, 335],
+    },
+  ]);
+  const [accessories, setAccessories] = useState([
+    {
+      motion: "push",
+      name: "Overhead Dumbbell Press",
+      sets: 3,
+      reps: 5,
+      weight: 50,
     },
     {
       motion: "push",
@@ -82,13 +103,6 @@ export default function PPLScreen(props) {
       sets: 5,
       reps: 10,
       weight: 50,
-    },
-    {
-      motion: "pull",
-      name: "Deadlift",
-      sets: 3,
-      reps: 5,
-      repsWeight: [305, 355, 400],
     },
     {
       motion: "pull",
@@ -169,13 +183,6 @@ export default function PPLScreen(props) {
     },
     {
       motion: "legs",
-      name: "Squat",
-      sets: 3,
-      reps: 5,
-      repsWeight: [255, 295, 335],
-    },
-    {
-      motion: "legs",
       name: "Leg Press",
       sets: 4,
       reps: 10,
@@ -207,12 +214,12 @@ export default function PPLScreen(props) {
   useFocusEffect(
     useCallback(() => {
       if (props.route.params) {
-        setSelectedExercise(props.route.params.motion);
+        setSelectedGroup(props.route.params.motion);
       }
       return () => {
         if (props.route.params) {
           props.navigation.setParams({ motion: "all" });
-          setSelectedExercise(props.route.params.motion);
+          setSelectedGroup(props.route.params.motion);
         }
       };
     }, [props.route.params])
@@ -221,13 +228,25 @@ export default function PPLScreen(props) {
   return (
     <SafeAreaView style={styles.background}>
       <ScrollView>
-        <View>
-          <Text></Text>
+        <View style={styles.buttons}>
+          <TouchableOpacity style={styles.button}>
+            <Text>1</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button}>
+            <Text>2</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button}>
+            <Text>3</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button}>
+            <Text>4</Text>
+          </TouchableOpacity>
         </View>
-        {exercises
+        {/* {compuonds.filter((exercise) => {})} */}
+        {accessories
           .filter((exercise) => {
-            if (selectedExercise === "all") return exercise;
-            return exercise.motion === selectedExercise;
+            if (selectedGroup === "all") return exercise;
+            return exercise.motion === selectedGroup;
           })
           .map((exercise, idx) => (
             <View key={idx} style={styles.exerciseContainer}>
@@ -259,6 +278,20 @@ const styles = StyleSheet.create({
     paddingTop: 40,
     paddingBottom: 55,
     paddingHorizontal: 5,
+  },
+  buttons: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    marginTop: 10,
+  },
+  button: {
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "red",
+    borderRadius: 10,
+    height: 40,
+    width: 40,
   },
   exercise: {
     backgroundColor: "#232323",

@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import {
+  Button,
   Image,
   StyleSheet,
   Text,
@@ -7,41 +8,41 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { editWeight } from "../redux/actions";
 
 export default function MaxScreen() {
-  const [squat, setSquat] = useState(440);
-  const [bench, setBench] = useState(345);
-  const [deadlift, setDeadlift] = useState(520);
+  const { squat, bench, deadlift } = useSelector((s) => s);
+  const dispatch = useDispatch();
 
-  const handleTapSquat = (n) => {
-    setSquat(squat + n);
-    AsyncStorage.setItem("maxSquat", squat);
+  const handlePress = (exercise, weight) => {
+    dispatch(editWeight(exercise, weight));
   };
 
   return (
     <SafeAreaView style={styles.background}>
-      {/* <TextInput style={styles.input} /> */}
       <View style={styles.title}>
         <Text style={styles.titleText}>1RM MAXES</Text>
         <Text style={styles.titleDesc}>
-          The below compound exercise 1RM maximum weights are used to calculate
-          working weights each day. Working weights are calculated based on 90%
-          of the 1RM figure.
+          The below compound exercise 1RM weights are used to calculate working
+          weights each day. Working weights are calculated based on 90% of the
+          1RM figure.
         </Text>
       </View>
+      <Button title="clear AsyncStorage" onPress={() => AsyncStorage.clear()} />
       <View style={styles.liftContainer}>
         <Text style={styles.liftTitle}>SQUAT</Text>
         <View style={styles.maxModule}>
           <TouchableOpacity
-            onPress={() => handleTapSquat(-10)}
+            onPress={() => handlePress("squat", squat - 10)}
             style={styles.button}
           >
             <Text style={styles.buttonText}>-10</Text>
           </TouchableOpacity>
           <Text style={styles.maxNum}>{squat}</Text>
           <TouchableOpacity
-            onPress={() => handleTapSquat(10)}
+            onPress={() => handlePress("squat", squat + 10)}
             style={styles.button}
           >
             <Text style={styles.buttonText}>+10</Text>
@@ -52,14 +53,14 @@ export default function MaxScreen() {
         <Text style={styles.liftTitle}>BENCH</Text>
         <View style={styles.maxModule}>
           <TouchableOpacity
-            onPress={() => setBench(bench - 5)}
+            onPress={() => handlePress("bench", bench - 5)}
             style={styles.button}
           >
             <Text style={styles.buttonText}>-5</Text>
           </TouchableOpacity>
           <Text style={styles.maxNum}>{bench}</Text>
           <TouchableOpacity
-            onPress={() => setBench(bench + 5)}
+            onPress={() => handlePress("bench", bench + 5)}
             style={styles.button}
           >
             <Text style={styles.buttonText}>+5</Text>
@@ -70,14 +71,14 @@ export default function MaxScreen() {
         <Text style={styles.liftTitle}>DEADLIFT</Text>
         <View style={styles.maxModule}>
           <TouchableOpacity
-            onPress={() => setDeadlift(deadlift - 10)}
+            onPress={() => handlePress("deadlift", deadlift - 10)}
             style={styles.button}
           >
             <Text style={styles.buttonText}>-10</Text>
           </TouchableOpacity>
           <Text style={styles.maxNum}>{deadlift}</Text>
           <TouchableOpacity
-            onPress={() => setDeadlift(deadlift + 10)}
+            onPress={() => handlePress("deadlift", deadlift + 10)}
             style={styles.button}
           >
             <Text style={styles.buttonText}>+10</Text>
