@@ -12,7 +12,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "./screens/HomeScreen";
 import MaxScreen from "./screens/MaxScreen";
 import PPLScreen from "./screens/PPLScreen";
-import HistoryScreen from "./screens/HistoryScreen";
+// import HistoryScreen from "./screens/HistoryScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -76,7 +76,7 @@ export default function tabs() {
           ),
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="History"
         component={HistoryScreen}
         options={{
@@ -91,7 +91,7 @@ export default function tabs() {
             </View>
           ),
         }}
-      />
+      /> */}
     </Tab.Navigator>
   );
 }

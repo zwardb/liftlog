@@ -1,7 +1,16 @@
 import React from "react";
-import { Image, ImageBackground, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  ImageBackground,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import PPLScreen from "./PPLScreen";
 
-export default function HomeScreen() {
+export default function HomeScreen({ navigation }) {
   return (
     <ImageBackground
       style={styles.background}
@@ -12,7 +21,29 @@ export default function HomeScreen() {
           style={styles.logo}
           source={require("../assets/dumbbell_icon.png")}
         />
-        <Text style={styles.title}>Lift Big, Get Big</Text>
+        <Text style={styles.title}>LIFT LOG 5/3/1 PPL</Text>
+      </View>
+      <View style={styles.selection}>
+        <TouchableOpacity
+          style={styles.group}
+          onPress={() => navigation.navigate("PPL", { motion: "push" })}
+        >
+          <Text style={styles.pplText}>PUSH</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.group}
+          onPress={() => navigation.navigate("PPL", { motion: "pull" })}
+          motion={"Pull"}
+        >
+          <Text style={styles.pplText}>PULL</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.group}
+          onPress={() => navigation.navigate("PPL", { motion: "legs" })}
+          motion={"Legs"}
+        >
+          <Text style={styles.pplText}>LEGS</Text>
+        </TouchableOpacity>
       </View>
     </ImageBackground>
   );
@@ -21,25 +52,48 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    justifyContent: "flex-end",
+    justifyContent: "center",
     alignItems: "center",
   },
-  menu: {
-    width: "100%",
-    height: 70,
-    backgroundColor: "#fc5c65",
-  },
   logo: {
-    width: 100,
-    height: 100,
+    width: 125,
+    height: 125,
   },
   logoContainer: {
     position: "absolute",
-    top: 100,
+    top: 25,
     alignItems: "center",
   },
   title: {
+    marginTop: -25,
+    textShadowColor: "#000000",
+    textShadowOffset: { width: 2, height: 2 },
+    textShadowRadius: 0.5,
+    color: "#ffffff",
     fontWeight: "bold",
-    fontSize: 25,
+    fontSize: 36,
+  },
+  selection: {
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  group: {
+    flex: 1,
+    bottom: 175,
+    height: 40,
+    alignItems: "center",
+    justifyContent: "space-around",
+  },
+  pplText: {
+    flex: 1,
+    backgroundColor: "rgba(35, 35, 35, 0.7)",
+    borderRadius: 10,
+    textShadowColor: "#000000",
+    textShadowOffset: { width: 2, height: 2 },
+    textShadowRadius: 0.5,
+    color: "#ffffff",
+    fontWeight: "bold",
+    fontSize: 36,
   },
 });
