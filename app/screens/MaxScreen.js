@@ -7,11 +7,17 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function MaxScreen() {
   const [squat, setSquat] = useState(440);
   const [bench, setBench] = useState(345);
   const [deadlift, setDeadlift] = useState(520);
+
+  const handleTapSquat = (n) => {
+    setSquat(squat + n);
+    AsyncStorage.setItem("maxSquat", squat);
+  };
 
   return (
     <SafeAreaView style={styles.background}>
@@ -28,14 +34,14 @@ export default function MaxScreen() {
         <Text style={styles.liftTitle}>SQUAT</Text>
         <View style={styles.maxModule}>
           <TouchableOpacity
-            onPress={() => setSquat(squat - 10)}
+            onPress={() => handleTapSquat(-10)}
             style={styles.button}
           >
             <Text style={styles.buttonText}>-10</Text>
           </TouchableOpacity>
           <Text style={styles.maxNum}>{squat}</Text>
           <TouchableOpacity
-            onPress={() => setSquat(squat + 10)}
+            onPress={() => handleTapSquat(10)}
             style={styles.button}
           >
             <Text style={styles.buttonText}>+10</Text>

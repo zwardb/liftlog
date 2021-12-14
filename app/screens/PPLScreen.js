@@ -207,19 +207,19 @@ export default function PPLScreen(props) {
   useFocusEffect(
     useCallback(() => {
       if (props.route.params) {
-        console.log("in focus!");
         setSelectedExercise(props.route.params.motion);
       }
       return () => {
-        console.log("out of focus!");
-        setSelectedExercise("all");
+        if (props.route.params) {
+          props.navigation.setParams({ motion: "all" });
+          setSelectedExercise(props.route.params.motion);
+        }
       };
-    }, [])
+    }, [props.route.params])
   );
 
   return (
     <SafeAreaView style={styles.background}>
-      {console.log(selectedExercise)}
       <ScrollView>
         <View>
           <Text></Text>

@@ -27,6 +27,8 @@
     },
     "web": {
       "favicon": "./app/assets/favicon.png"
-    }
+    },
+    "description": "Basic application to track workouts based on a 5/3/1 PPL format.",
+    "githubUrl": "https://github.com/zwardb/liftlog"
   }
 }
