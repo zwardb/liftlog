@@ -36,6 +36,7 @@ export default function PPLScreen(props) {
     if (week === 4)
       return [mather(lift, 0.4), mather(lift, 0.5), mather(lift, 0.6)];
   };
+
   const reps = () => {
     if (week === 1 || week === 4) return [5, 5, 5];
     if (week === 2) return [3, 3, 3];
@@ -266,13 +267,20 @@ export default function PPLScreen(props) {
             <View key={idx} style={styles.exerciseContainer}>
               <View style={styles.exercise}>
                 <Text style={styles.exerciseName}>{exercise.name}</Text>
-                {weights(props.route.params.motion).map((weight, idx) => (
-                  <View key={idx} style={styles.reps}>
-                    <Text style={styles.repsListNum}>{idx + 1}</Text>
-                    <Text style={styles.repsText}>{weight}lb</Text>
-                    <Text style={styles.repsText}>x {reps(0)[idx]}</Text>
-                  </View>
-                ))}
+                {selectedGroup !== "all" ? (
+                  weights(selectedGroup).map((weight, idx) => (
+                    <View key={idx} style={styles.reps}>
+                      <Text style={styles.repsListNum}>{idx + 1}</Text>
+                      <Text style={styles.repsText}>{weight}lb</Text>
+                      <Text style={styles.repsText}>x {reps(0)[idx]}</Text>
+                    </View>
+                  ))
+                ) : (
+                  <Text style={styles.nope}>
+                    Navigate to Push, Pull, or Legs from the homescreen to view
+                    compound lift workouts!
+                  </Text>
+                )}
               </View>
             </View>
           ))}
@@ -352,5 +360,11 @@ const styles = StyleSheet.create({
     color: "#ffffff",
     fontSize: 16,
     marginTop: -5,
+  },
+  nope: {
+    color: "#ffffff",
+    fontSize: 16,
+    marginTop: -5,
+    textAlign: "center",
   },
 });
