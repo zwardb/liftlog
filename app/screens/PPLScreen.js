@@ -9,38 +9,53 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useFocusEffect } from "@react-navigation/native";
-import { editWeek } from "../redux/actions";
 
 export default function PPLScreen(props) {
-  const { squat, bench, deadlift, week } = useSelector((s) => s);
-  const dispatch = useDispatch();
+  const { squat, bench, deadlift } = useSelector((s) => s);
+  const [week, setWeek] = useState(1);
   const [selectedGroup, setSelectedGroup] = useState("all");
+
+  const weights = (motion) => {
+    const mather = (num, percent) => Math.round((num * 0.9 * percent) / 5) * 5;
+    const lift =
+      motion === "push"
+        ? bench
+        : motion === "pull"
+        ? deadlift
+        : motion === "legs"
+        ? squat
+        : null;
+    if (week === 1)
+      return [mather(lift, 0.65), mather(lift, 0.75), mather(lift, 0.85)];
+    if (week === 2)
+      return [mather(lift, 0.7), mather(lift, 0.8), mather(lift, 0.9)];
+    if (week === 3)
+      return [mather(lift, 0.75), mather(lift, 0.85), mather(lift, 0.95)];
+    if (week === 4)
+      return [mather(lift, 0.4), mather(lift, 0.5), mather(lift, 0.6)];
+  };
+  const reps = () => {
+    if (week === 1 || week === 4) return [5, 5, 5];
+    if (week === 2) return [3, 3, 3];
+    if (week === 3) return [5, 3, 1];
+  };
   const [compounds, setCompounds] = useState([
     {
       motion: "push",
       name: "Bench Press",
-      sets: 3,
-      reps: 5,
-      repsWeight: [200, 235, 265],
     },
     {
       motion: "pull",
       name: "Deadlift",
-      sets: 3,
-      reps: 5,
-      repsWeight: [305, 355, 400],
     },
     {
       motion: "legs",
       name: "Squat",
-      sets: 3,
-      reps: 5,
-      repsWeight: [255, 295, 335],
     },
   ]);
-  const [accessories, setAccessories] = useState([
+  const accessories = [
     {
       motion: "push",
       name: "Overhead Dumbbell Press",
@@ -209,7 +224,7 @@ export default function PPLScreen(props) {
       reps: 10,
       weight: 160,
     },
-  ]);
+  ];
 
   useFocusEffect(
     useCallback(() => {
@@ -229,20 +244,38 @@ export default function PPLScreen(props) {
     <SafeAreaView style={styles.background}>
       <ScrollView>
         <View style={styles.buttons}>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={() => setWeek(1)}>
             <Text>1</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={() => setWeek(2)}>
             <Text>2</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={() => setWeek(3)}>
             <Text>3</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={() => setWeek(4)}>
             <Text>4</Text>
           </TouchableOpacity>
         </View>
-        {/* {compuonds.filter((exercise) => {})} */}
+        {compounds
+          .filter((exercise) => {
+            if (selectedGroup === "all") return exercise;
+            return exercise.motion === selectedGroup;
+          })
+          .map((exercise, idx) => (
+            <View key={idx} style={styles.exerciseContainer}>
+              <View style={styles.exercise}>
+                <Text style={styles.exerciseName}>{exercise.name}</Text>
+                {weights(props.route.params.motion).map((weight, idx) => (
+                  <View key={idx} style={styles.reps}>
+                    <Text style={styles.repsListNum}>{idx + 1}</Text>
+                    <Text style={styles.repsText}>{weight}lb</Text>
+                    <Text style={styles.repsText}>x {reps(0)[idx]}</Text>
+                  </View>
+                ))}
+              </View>
+            </View>
+          ))}
         {accessories
           .filter((exercise) => {
             if (selectedGroup === "all") return exercise;
@@ -255,14 +288,6 @@ export default function PPLScreen(props) {
                 <Text style={styles.setsReps}>
                   {exercise.sets} sets x {exercise.reps} reps
                 </Text>
-                {exercise.repsWeight
-                  ? exercise.repsWeight.map((weight, idx) => (
-                      <View key={idx} style={styles.reps}>
-                        <Text style={styles.repsListNum}>{idx + 1}</Text>
-                        <Text style={styles.repsText}>{weight}lb</Text>
-                      </View>
-                    ))
-                  : null}
               </View>
             </View>
           ))}
